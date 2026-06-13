@@ -8,6 +8,7 @@ const YouTube = {
   isActive: false,
   hiddenNavElements: new Set(),
   hiddenFocusElements: new Set(),
+  hiddenMostRelevantElements: new Set(),
   init: function () {
     if (this.initialized) return;
     Utils.ensureBody(() => this._start());
@@ -27,16 +28,17 @@ const YouTube = {
     this.ensureObservers();
     chrome.storage.onChanged.addListener((changes) => {
       if (
-        changes.platformSettings ||
-        changes.focusMode ||
-        changes.ft_timer_end ||
+        changes.platformSettings || 
+        changes.focusMode || 
+        changes.ft_timer_end || 
         changes.ft_timer_type ||
-        changes.visualHideHiddenPlatforms ||
-        changes.restrictHiddenPlatforms ||
+        changes.visualHideHiddenPlatforms || 
+        changes.restrictHiddenPlatforms || 
         changes.popup_visible_yt ||
-        changes.popup_visible_ig ||
-        changes.popup_visible_tt ||
-        changes.popup_visible_fb
+        changes.popup_visible_ig || 
+        changes.popup_visible_tt || 
+        changes.popup_visible_fb || 
+        changes.hide_yt_most_relevant
       ) {
         this.runChecks();
       }
@@ -80,6 +82,7 @@ const YouTube = {
     this.removeVisualFocus();
     this.clearInlineHiding();
     this.setLogoFix(false);
+    this.restoreHidden(this.hiddenMostRelevantElements);
     if (this.observer) this.observer.disconnect();
     this.observer = null;
   },
@@ -242,6 +245,7 @@ const YouTube = {
   clearInlineHiding: function () {
     this.restoreHidden(this.hiddenNavElements);
     this.restoreHidden(this.hiddenFocusElements);
+    this.restoreHidden(this.hiddenMostRelevantElements);
   },
   applyInlineHiding: function () {
     const shouldHide =
@@ -300,6 +304,21 @@ const YouTube = {
           const tab = link.closest("yt-tab-shape");
           if (tab) this.hideElement(tab, this.hiddenFocusElements);
         });
+    }
+
+    if (!CONFIG.visualHiding.ytMostRelevant) {
+      this.restoreHidden(this.hiddenMostRelevantElements);
+    } else {
+      document.querySelectorAll("ytd-rich-shelf-renderer").forEach((shelf) => {
+        const titleEl = shelf.querySelector("#title");
+        if (
+          titleEl && titleEl.textContent.trim().toLowerCase() === "most relevant"
+        ) {
+          const section = shelf.closest("ytd-rich-section-renderer");
+          if (section) this.hideElement(section, this.hiddenMostRelevantElements);
+          else this.hideElement(shelf, this.hiddenMostRelevantElements);
+        }
+      });
     }
   },
   setLogoFix: function (isEnabled) {

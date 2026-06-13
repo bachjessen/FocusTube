@@ -256,6 +256,7 @@ const PLATFORM_SETTINGS = {
   yt: [
     { key: "hide_yt_shorts_nav", label: "Hide Shorts Button" },
     { key: "hide_yt_shorts_shelves", label: "Hide Shorts Shelves" },
+    { key: "hide_yt_most_relevant", label: 'Hide "Most relevant"' },
   ],
   ig: [
     { key: "hide_ig_stories", label: "Hide Stories" },

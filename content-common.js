@@ -31,6 +31,7 @@ const CONFIG = {
     fbReelsShelves: true,
     liFeed: true,
     liAddFeed: true,
+    ytMostRelevant: true,
   },
 };
 const FocusState = {
@@ -693,6 +694,7 @@ const UI = {
       "hide_fb_reels_shelves",
       "hide_li_feed",
       "hide_li_addfeed",
+      "hide_yt_most_relevant",
       "ft_debug",
     ],
     (res) => {
@@ -736,6 +738,7 @@ const UI = {
         fbReelsShelves: res.hide_fb_reels_shelves !== false,
         liFeed: res.hide_li_feed !== false,
         liAddFeed: res.hide_li_addfeed !== false,
+        ytMostRelevant: res.hide_yt_most_relevant !== false,
       };
       Utils._debugEnabled = res.ft_debug === true;
       Utils.ensureBody(() => {
@@ -919,6 +922,11 @@ const UI = {
     if (changes.hide_li_addfeed) {
       CONFIG.visualHiding.liAddFeed =
         changes.hide_li_addfeed.newValue !== false;
+      Utils.applyVisualHidingClasses();
+    }
+    if (changes.hide_yt_most_relevant) {
+      CONFIG.visualHiding.ytMostRelevant =
+        changes.hide_yt_most_relevant.newValue !== false;
       Utils.applyVisualHidingClasses();
     }
     if (changes.darkMode) {

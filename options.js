@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
     hide_fb_reels_shelves: true,
     hide_li_feed: true,
     hide_li_addfeed: true,
+    hide_yt_most_relevant: true,
     showBreakButton: true,
     accentColor: "#4facfe",
   };
@@ -612,6 +613,11 @@ const platforms = {
         id: "hide_yt_shorts_shelves",
         label: "Hide Shorts Shelves",
         desc: "Hide Shorts shelves in feed",
+      },
+      {
+        id: "hide_yt_most_relevant",
+        label: "Hide Most Relevant",
+        desc: 'Hide "Most relevant" section on subscriptions',
       },
     ],
   },
